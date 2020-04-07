@@ -7,8 +7,10 @@ super();
 this.state = {
 username: '',
 password: '',
-redirectToReferrer: false
+redirectToReferrer: false,
+redirectToReferrerr: false
 };
+this.data = {};
 this.login = this.login.bind(this);
 this.onChange = this.onChange.bind(this);
 }
@@ -19,6 +21,9 @@ let responseJson = result;
 if(responseJson.userData){
 let jsondata = JSON.stringify(responseJson.userData);
 sessionStorage.setItem('userData',jsondata);
+this.data = JSON.parse(sessionStorage.getItem('userData'));
+if(this.data.username=="admin" && this.data.password=="admin")
+	this.setState({redirectToReferrerr: true});
 this.setState({redirectToReferrer: true});
 }
 else
@@ -36,9 +41,11 @@ render() {
 if (this.state.redirectToReferrer) {
 return (<Redirect to={'/doctordash'}/>)
 }
-if(sessionStorage.getItem('userData')){
-return (<Redirect to={'/doctordash'}/>)
+else if(this.state.redirectToReferrerr) {
+return (<Redirect to={'/admindash'}/>)
 }
+
+
 return (
 <div className="row" id="Body">
 <div className="medium-5 columns left">
@@ -46,9 +53,7 @@ return (
 <input type="text" name="username" placeholder="Username" onChange={this.onChange}/>
 <input type="password" name="password" placeholder="Password" onChange={this.onChange}/>
 <input type="submit" className="button" value="Login" onClick={this.login}/>
-<a href="/loginadmin" className="button">Admin login</a>
-<a href="/signup" className="button">Registration</a>
-<a href="/signdoc" className="button">Doctor registration</a>
+Not yet a member ? <a href="/signdoc">  Register</a>
 </div>
 </div>
 );

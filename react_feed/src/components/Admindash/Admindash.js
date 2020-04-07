@@ -18,7 +18,6 @@ this.state = {
 contacts:[],
 redirectToReferrer: false,
 };
-this.onChange = this.onChange.bind(this);
 this.logout = this.logout.bind(this);
 }
 
@@ -31,30 +30,17 @@ componentDidMount() {
      })
   }
 
-onChange(e)
-{
-console.log(e);
-PostData('changestat', this.state.contacts.doc_id).then((result) => {
-if(result.success)
-{
-	alert(result.success);
-}
-else
-	alert(result.error);
-}
-);
-}
 
 
 logout(){
 //sessionStorage.setItem("userData",1234);
-sessionStorage.clear();
+//sessionStorage.clear();
 this.setState({redirectToReferrer: true});
 }
 
 render() {
 if (this.state.redirectToReferrer) {
-return (<Redirect to={'/loginadmin'}/>)
+return (<Redirect to={'/login'}/>)
 }
 return (
 <div className="row" id="Body">
@@ -93,8 +79,9 @@ return (
 				{
 					
 					let did = parseInt(contacts.doc_id);
-					this.postData = {doct_id:did}
-					console.log(this.postData)
+					let uname = contacts.username;
+					let pword = contacts.password;
+					this.postData = {doct_id:did,username:uname,pasword:pword};
 					PostData('changestat', this.postData).then((result) => {
 						
 						

@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {PostData} from '../../services/PostData';
 import {Redirect} from 'react-router-dom';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+import './Signdoc.css';
 const ipfsClient = require('ipfs-http-client')
 class Signdoc extends Component {
 constructor(props){
@@ -78,7 +81,7 @@ if(this.state.username && this.state.password && this.state.email && this.state.
 PostData('signdoc',this.state).then((result) => {
 let responseJson = result;
 if(responseJson.userData){
-sessionStorage.setItem('userData',JSON.stringify(responseJson));
+//sessionStorage.setItem('userData',JSON.stringify(responseJson));
 this.setState({redirectToReferrer: true});
 }
 else
@@ -93,31 +96,38 @@ onChange(e){
 this.setState({[e.target.name]:e.target.value});
 }
 render() {
-if (this.state.redirectToReferrer || sessionStorage.getItem('userData')) {
+if (this.state.redirectToReferrer) {
 return (<Redirect to={'/login'}/>)
 }
 return (
 <div className="row " id="sBody">
 <div className="medium-5 columns left">
-<h4>Signup doctor</h4>
-<input type="text" name="email" placeholder="Email" onChange={this.onChange}/>
-<input type="text" name="name" placeholder="Name" onChange={this.onChange}/>
-<input type="text" name="username" placeholder="Username" onChange={this.onChange}/>
-<input type="password" name="password" placeholder="Password" onChange={this.onChange}/>
-<input type="text" name="bloodgrp" placeholder="Blood Group" onChange={this.onChange}/>
-<textarea name="address" rows="5" cols="20" placeholder="Address" onChange={this.onChange}/>
-<form id='captureMedia' onSubmit={this.handleSubmit}>
-          <input type='file' onChange={this.captureFile} /><br/>
-          <label htmlFor='keepFilename'><input type='checkbox' id='keepFilename' name='keepFilename' /> keep filename</label>
-</form>
-<div>
-    <label>Hash(Note: Please copy the hash that will be generated after choosing file into the input box below)</label><a target='_blank'
-    href={'https://ipfs.io/ipfs/' + this.state.added_file_hash}>
-		{this.state.added_file_hash}</a>
-</div>
-<input type="text" name="filehash" placeholder="File Hash" onChange={this.onChange} />
-<input type="submit" className="button" value="Sign Up" onClick={this.signup}/>
-<a href="/login">Login</a>
+<Tabs>
+	<TabList>
+	  <Tab>REGISTER DOCTOR</Tab>
+	  <Tab><a href="/signup">REGISTER PATIENT</a></Tab>
+	</TabList>
+	<TabPanel>
+		<h4>Signup doctor</h4>
+		<input type="text" name="email" placeholder="Email" onChange={this.onChange}/>
+		<input type="text" name="name" placeholder="Name" onChange={this.onChange}/>
+		<input type="text" name="username" placeholder="Username" onChange={this.onChange}/>
+		<input type="password" name="password" placeholder="Password" onChange={this.onChange}/>
+		<input type="text" name="bloodgrp" placeholder="Blood Group" onChange={this.onChange}/>
+		<textarea name="address" rows="5" cols="20" placeholder="Address" onChange={this.onChange}/>
+		<form id='captureMedia' onSubmit={this.handleSubmit}>
+           <input type='file' onChange={this.captureFile} /><br/>
+           <label htmlFor='keepFilename'><input type='checkbox' id='keepFilename' name='keepFilename' /> keep filename</label>
+		</form>
+		<div>
+		<label>Hash(Note: Please copy the hash that will be generated after choosing file into the input box below)</label><a target='_blank'
+			href={'https://ipfs.io/ipfs/' + this.state.added_file_hash}>
+			{this.state.added_file_hash}</a>
+		</div>
+		<input type="text" name="filehash" placeholder="File Hash" onChange={this.onChange} />
+		<input type="submit" className="button" value="Sign Up" onClick={this.signup}/>
+	</TabPanel>
+</Tabs>
 </div>
 </div>
 );
